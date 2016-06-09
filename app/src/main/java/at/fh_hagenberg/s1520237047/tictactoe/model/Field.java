@@ -7,13 +7,11 @@ package at.fh_hagenberg.s1520237047.tictactoe.model;
 public class Field {
 
     private Move[][] field;
+    private int size;
 
     public Field(int size) {
         this.field = new Move[size][size];
-    }
-
-    public Field(Move[][] field) {
-        this.field = field;
+        this.size = size;
     }
 
     public Move getMoveAtLocation(int x, int y) {
@@ -27,5 +25,9 @@ public class Field {
             throw new IllegalArgumentException("Player must not be null");
         }
         this.field[entry.y][entry.x] = entry;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

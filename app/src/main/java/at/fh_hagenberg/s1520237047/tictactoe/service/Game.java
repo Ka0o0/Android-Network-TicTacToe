@@ -148,4 +148,16 @@ public class Game {
     public boolean isRunning() {
         return running;
     }
+
+    public Field getField() {
+        return field;
+    }
+
+    public Player getLocalPlayer() {
+        return localPlayer;
+    }
+
+    public Player getRemotePlayer() {
+        return remotePlayer;
+    }
 }
