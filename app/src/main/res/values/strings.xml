@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">TicTacToe</string>
+    <string name="name">Name</string>
+    <string name="start_server">Start server</string>
+    <string name="connect_server">Connect to server</string>
+    <string name="enter_name">Enter your name</string>
+    <string name="player_1_success" >Player 1 wins!</string>
+    <string name="player_2_success" >Player 2 wins!</string>
+    <string name="success_question" >Do you want to play again?</string>
+    <string name="success_yes" >Yes</string>
+    <string name="success_no" >No</string>
 </resources>
