@@ -100,15 +100,4 @@ public class Game extends Activity implements View.OnClickListener {
             imageButton.setImageResource(R.drawable.circle);
 
     }
-    public void reset() {
-        String string;
-        ImageButton imageButton;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                string = "row" + i + "_button" + j;
-                imageButton =  (ImageButton) findViewById(getResources().getIdentifier(string, "id", getPackageName()));
-                imageButton.setImageResource(R.drawable.blank);
-            }
-        }
-    }
 }
