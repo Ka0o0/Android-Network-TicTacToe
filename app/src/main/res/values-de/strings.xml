@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TicTacToe</string>
+    <string name="connect_server">Verbinde mit Server</string>
+    <string name="start_server">Starte Server</string>
+    <string name="name">Name</string>
+    <string name="enter_name">Gib deinen Namen ein</string>
+    <string name="player_1_success">Spieler 1 gewinnt!</string>
+    <string name="player_2_success">Spieler 2 gewinnt!</string>
+    <string name="success_no">Nein</string>
+    <string name="success_yes">Ja</string>
+    <string name="success_question">Möchtest du nochmal spielen?</string>
+</resources>
