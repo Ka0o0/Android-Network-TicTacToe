@@ -1,6 +1,7 @@
 package at.fh_hagenberg.s1520237047.tictactoe.service.net;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -50,8 +51,19 @@ public class NetServerGameCreator implements GameCreator {
         } catch (IOException e) {
             e.printStackTrace();
             this.handler.onGameCreationFailed();
+        } finally {
+            this.close();
         }
 
+    }
+
+    private void close() {
+        try {
+            if (serverSocket != null)
+                serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendFieldSize(NetGameConnector netGameConnector) throws IOException {
@@ -78,5 +90,12 @@ public class NetServerGameCreator implements GameCreator {
         serverSocket = new ServerSocket(SERVER_PORT);
     }
 
-
+    public void cancel() {
+        if (serverSocket != null)
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
 }

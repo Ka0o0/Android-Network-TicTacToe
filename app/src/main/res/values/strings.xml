@@ -9,4 +9,20 @@
     <string name="success_question" >Do you want to play again?</string>
     <string name="success_yes" >Yes</string>
     <string name="success_no" >No</string>
+    <string name="enter_ip_address">Enter the IP-Address</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="name_empty">Name must not be empty</string>
+    <string name="wait_for_connection">Wait for connection</string>
+    <string name="connect_to_ip">Please connect to the following IP-Address from your other phone: %s</string>
+    <string name="game_creation_error">Could not create game!</string>
+    <string name="wrong_ip_address">Wrong IP address entered</string>
+    <string name="loading">Loading</string>
+    <string name="your_turn">It\'s your turn</string>
+    <string name="opponent_surrendered">Your opponent surrendered!</string>
+    <string name="connection_closed">The connection was lost</string>
+    <string name="waiting_for_opponent">Waiting for opponent</string>
+    <string name="move_not_possible">This move is not possible</string>
+    <string name="player_wins">Player %s wins</string>
+    <string name="match_draw">Match ends draw</string>
 </resources>

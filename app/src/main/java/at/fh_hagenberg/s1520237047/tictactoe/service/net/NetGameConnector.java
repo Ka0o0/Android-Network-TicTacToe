@@ -89,12 +89,18 @@ public class NetGameConnector extends GameConnector {
 
         Move move = null;
 
-        if (actionName.equals("surrender")) {
+        if (actionName == null) {
+            this.closeConnection();
+            throw new ConnectionLostException();
+        } else if (actionName.equals("surrender")) {
             this.closeConnection();
             throw new OpponentSurrenderedException();
         } else if (actionName.equals("move")) {
             try {
                 String moveLine = this.reader.readLine();
+                if(moveLine == null) {
+                    throw new IOException("move line empty");
+                }
                 move = this.parseMoveLine(moveLine);
             } catch (IOException e) {
                 this.closeConnection();

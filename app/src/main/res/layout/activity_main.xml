@@ -29,12 +29,6 @@
             android:hint="@string/enter_name"
             android:inputType="textPersonName" />
 
-        <Button
-            android:id="@+id/button_enter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:text="Enter" />
     </LinearLayout>
 
     <LinearLayout

@@ -33,7 +33,7 @@ public class Game {
         this.observer = observer;
     }
 
-    interface TicTacToeGameObserver {
+    public interface TicTacToeGameObserver {
         void onMyMoveComplete(Game game, Move move);
 
         void onSurrenderSuccessful(Game game);
@@ -43,6 +43,10 @@ public class Game {
         void onOpponentSurrendered(Game game, Player player);
 
         void onConnectionClosed(Game game);
+
+        void onMatchDraw(Game game);
+
+        void onMatchWin(Game game, Player winner);
     }
 
     public Game(Field field, Player localPlayer, Player remotePlayer, GameConnector connector, boolean myTurn) {
@@ -56,10 +60,10 @@ public class Game {
     public void playMove(int x, int y) throws MoveNotPossibleException, NotConnectedException, NoObserverSetException {
         this.checkMovePreconditions();
 
-        this.myTurn = false;
 
         Move move = new Move(this.localPlayer, x, y);
         field.setMove(move);
+        this.myTurn = false;
 
         this.sendMoveAsynchronously(move);
     }
@@ -71,41 +75,70 @@ public class Game {
                 try {
                     connector.sendMove(move);
                     observer.onMyMoveComplete(Game.this, move);
-                    waitForOponentsMove();
+                    checkForEnd();
                 } catch (IOException | ConnectionLostException e) {
-                    observer.onConnectionClosed(Game.this);
+                    onConnectionClosed();
                 }
             }
         }).start();
     }
 
-    private void waitForOponentsMove() {
-        if (this.isMyTurn()) {
-            return;
+    private void checkForEnd() {
+        Player winner;
+        if(this.field.isFull()) {
+            this.myTurn = false;
+            this.running = false;
+            this.close(false);
+            this.observer.onMatchDraw(this);
+        } else if ((winner = this.field.getWinner()) != null) {
+            this.myTurn = false;
+            this.running = false;
+            this.close(false);
+            this.observer.onMatchWin(this, winner);
+        }
+    }
+
+    public void waitForOpponentsMove() throws NotConnectedException, MoveNotPossibleException, NoObserverSetException {
+        if (connector.isClosed()) {
+            throw new NotConnectedException();
+        } else if (this.isMyTurn()) {
+            throw new MoveNotPossibleException();
+        } else if (this.observer == null) {
+            throw new NoObserverSetException();
         }
 
-        try {
-            Move move = connector.getOpponentsMove();
-            if(move == null){
-                throw new RuntimeException("Move may never be null");
+        waitForOpponentsMoveAsynchronously();
+    }
+
+    private void waitForOpponentsMoveAsynchronously() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Move move = connector.getOpponentsMove();
+                    if (move == null) {
+                        throw new RuntimeException("Move may never be null");
+                    }
+                    move.player = remotePlayer;
+                    field.setMove(move);
+                    myTurn = true;
+                    observer.onOpponentsMoveComplete(Game.this, move);
+                    checkForEnd();
+                } catch (OpponentSurrenderedException e) {
+                    onOpponentSurrendered();
+                } catch (IOException | ConnectionLostException e) {
+                    onConnectionClosed();
+                } catch (MoveNotPossibleException e) {
+                    //If the move is not possible something is terribly wrong -> close the connection
+                    try {
+                        connector.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    onConnectionClosed();
+                }
             }
-            move.player = remotePlayer;
-            this.field.setMove(move);
-            this.myTurn = true;
-            this.observer.onOpponentsMoveComplete(this, move);
-        } catch (OpponentSurrenderedException e) {
-            this.onOpponentSurrendered();
-        } catch (IOException | ConnectionLostException e) {
-            this.onConnectionClosed();
-        } catch (MoveNotPossibleException e) {
-            //If the move is not possible something is terribly wrong -> close the connection
-            try {
-                this.connector.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            this.onConnectionClosed();
-        }
+        }).start();
     }
 
     private void onOpponentSurrendered() {
@@ -136,13 +169,31 @@ public class Game {
     }
 
     private void checkMovePreconditions() throws MoveNotPossibleException, NotConnectedException, NoObserverSetException {
-        if (connector.isClosed()) {
+        if (connector == null || connector.isClosed()) {
             throw new NotConnectedException();
         } else if (!this.isMyTurn() && running) {
             throw new MoveNotPossibleException();
         } else if (this.observer == null) {
             throw new NoObserverSetException();
         }
+    }
+
+    public void close (boolean fireEvent) {
+        try {
+            if (this.connector != null)
+                this.connector.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.running = false;
+
+        if(fireEvent){
+            onConnectionClosed();
+        }
+    }
+
+    public void close() {
+        close(true);
     }
 
     public boolean isRunning() {

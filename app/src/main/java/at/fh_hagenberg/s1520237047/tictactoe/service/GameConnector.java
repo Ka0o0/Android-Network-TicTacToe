@@ -13,7 +13,7 @@ import at.fh_hagenberg.s1520237047.tictactoe.service.exceptions.OpponentSurrende
 public abstract class GameConnector {
 
 
-    protected boolean closed;
+    public boolean closed;
 
     public boolean isClosed() {
         return closed;

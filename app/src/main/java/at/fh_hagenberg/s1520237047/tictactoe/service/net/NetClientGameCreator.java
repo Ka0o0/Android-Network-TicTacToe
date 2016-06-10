@@ -59,7 +59,7 @@ public class NetClientGameCreator implements GameCreator {
 
     private Player getOpponentPlayer(NetGameConnector netGameConnector) throws IOException {
         Player player = new Player();
-        player.id = 1;
+        player.id = 0;
         player.name = netGameConnector.reader.readLine();
         return player;
     }
