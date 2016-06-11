@@ -1,11 +1,14 @@
 package at.fh_hagenberg.s1520237047.tictactoe;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -40,11 +43,12 @@ public class MainActivity extends BaseActivity implements GameCreator.GameCreato
 
     public static final String TAG = "Main";
 
+
     @NotEmpty(messageResId = R.string.name_empty)
     @ViewById(R.id.input_name)
     public TextView nameTextView;
-
     private Validator validator;
+    SharedPreferences sharedPreferences;
 
     Handler handler = new Handler();
 
@@ -126,42 +130,42 @@ public class MainActivity extends BaseActivity implements GameCreator.GameCreato
 
     @Click(R.id.button_start_server)
     public void showStartServerDialog() {
-        /*Game game = new Game(new Field(3), new Player(0, "TEst"), new Player(1, "gegner"), null, true);
-        GlobalGame.
-        Game_.intent(this).start();*/
-        validator.setValidationListener(new Validator.ValidationListener() {
-            @Override
-            public void onValidationSucceeded() {
-                startServer();
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(getString(R.string.wait_for_connection));
-                TextView textView = new TextView(MainActivity.this);
-                textView.setText(getString(R.string.connect_to_ip, getFormattedIpAddress()));
-                builder.setView(textView);
-                builder.setCancelable(false);
-
-                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        cancelServer();
-                    }
-                });
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        cancelServer();
-                    }
-                });
-                currentDialog = builder.show();
-            }
-
-            @Override
-            public void onValidationFailed(List<ValidationError> errors) {
-                showValidationError(errors);
-            }
-        });
-        validator.validate();
+        Game game = new Game(new Field(3), new Player(0, "Test"), new Player(1, "gegner"), null, true);
+        GlobalGame.getInstance().setGame(game);
+        Game_.intent(this).start();
+//        validator.setValidationListener(new Validator.ValidationListener() {
+//            @Override
+//            public void onValidationSucceeded() {
+//                startServer();
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//                builder.setTitle(getString(R.string.wait_for_connection));
+//                TextView textView = new TextView(MainActivity.this);
+//                textView.setText(getString(R.string.connect_to_ip, getFormattedIpAddress()));
+//                builder.setView(textView);
+//                builder.setCancelable(false);
+//
+//                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        cancelServer();
+//                    }
+//                });
+//                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                    @Override
+//                    public void onCancel(DialogInterface dialog) {
+//                        cancelServer();
+//                    }
+//                });
+//                currentDialog = builder.show();
+//            }
+//
+//            @Override
+//            public void onValidationFailed(List<ValidationError> errors) {
+//                showValidationError(errors);
+//            }
+//        });
+//        validator.validate();
     }
 
     private void startServer() {

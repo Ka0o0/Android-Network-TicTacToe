@@ -1,15 +1,18 @@
 package at.fh_hagenberg.s1520237047.tictactoe;
 
+
+import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -25,6 +28,8 @@ import at.fh_hagenberg.s1520237047.tictactoe.service.GlobalGame;
 import at.fh_hagenberg.s1520237047.tictactoe.service.exceptions.NoObserverSetException;
 import at.fh_hagenberg.s1520237047.tictactoe.service.exceptions.NotConnectedException;
 
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 @EActivity(R.layout.game)
 public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.tictactoe.service.Game.TicTacToeGameObserver {
 
@@ -32,7 +37,7 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
     GameButton[][] imageButtons;
 
     @ViewById(R.id.game_grid)
-    LinearLayout gameGrid;
+    TableLayout gameGrid;
 
     Handler handler = new Handler();
 
@@ -57,25 +62,50 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
     }
 
     private void close() {
-        if(this.game.isRunning()){
+        if (this.game.isRunning()) {
             this.game.close();
         }
     }
 
     private void initImageButtons() {
+
+//        gameGrid = new LinearLayout();
+
         for (int i = 0; i < imageButtons.length; i++) {
-            LinearLayout horizontalLinearLayout = new LinearLayout(this);
-            horizontalLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-            horizontalLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            TableRow tableRow = new TableRow(this);
+            tableRow.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            tableRow.setOrientation(TableLayout.HORIZONTAL);
+            tableRow.setGravity(Gravity.CENTER);
+
+            FrameLayout secTableRow = new FrameLayout(this);
+            secTableRow.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
 
             for (int j = 0; j < imageButtons[i].length; j++) {
 
+                imageButtons[i][j] = createGameButtonForCoordinates(i, j);
 
-                imageButtons[i][j] = createGameButtonForCoordinates(j, i);
-                horizontalLinearLayout.addView(imageButtons[i][j]);
+                if (j > 0 && j < 3) {
+                    View view = new View(this);
+                    view.setLayoutParams(new TableRow.LayoutParams(5, ViewGroup.LayoutParams.MATCH_PARENT));
+                    view.setBackgroundColor(Color.BLACK);
+                    tableRow.addView(view);
+                }
+
+                if (i > 0 && i < 3) {
+                    View view = new View(this);
+                    view.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5));
+                    view.setBackgroundColor(Color.BLACK);
+                    secTableRow.addView(view);
+                }
+
+                tableRow.addView(imageButtons[i][j]);
+
 
             }
-            gameGrid.addView(horizontalLinearLayout);
+            gameGrid.setGravity(Gravity.CENTER_HORIZONTAL);
+            gameGrid.addView(secTableRow);
+            gameGrid.addView(tableRow);
         }
     }
 
@@ -84,10 +114,13 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
         temp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onGameButtonClick((GameButton)v);
+                onGameButtonClick((GameButton) v);
             }
         });
-        temp.setBackgroundColor(Color.RED);
+        temp.setBackgroundColor(Color.TRANSPARENT);
+        temp.setImageResource(R.drawable.blank);
+        temp.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        temp.setAdjustViewBounds(true);
         temp.setGameX(x);
         temp.setGameY(y);
         return temp;
