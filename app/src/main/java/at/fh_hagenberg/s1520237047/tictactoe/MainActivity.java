@@ -204,6 +204,7 @@ public class MainActivity extends BaseActivity implements GameCreator.GameCreato
 
     @Override
     public void onGameCreated(Game game) {
+        hideProgressDialog();
         savePlayerName();
         GlobalGame.getInstance().setGame(game);
         Game_.intent(this).startForResult(0);
