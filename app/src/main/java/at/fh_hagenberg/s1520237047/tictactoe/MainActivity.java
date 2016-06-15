@@ -3,12 +3,10 @@ package at.fh_hagenberg.s1520237047.tictactoe;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -97,6 +95,7 @@ public class MainActivity extends BaseActivity implements GameCreator.GameCreato
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         connectToServer(input.getText().toString());
+                        dialog.dismiss();
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -162,6 +161,7 @@ public class MainActivity extends BaseActivity implements GameCreator.GameCreato
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cancelServer();
+                        dialog.dismiss();
                     }
                 });
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {

@@ -233,7 +233,7 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
 
     private void showMain() {
         //MainActivity_.intent(this).start();
-        this.finishActivity(0);
+        this.finish();
     }
 
     @Override
