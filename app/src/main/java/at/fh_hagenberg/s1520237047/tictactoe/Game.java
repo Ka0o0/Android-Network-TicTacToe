@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
@@ -39,6 +40,9 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
     @ViewById(R.id.game_grid)
     TableLayout gameGrid;
 
+    @ViewById(R.id.game_text_player)
+    TextView playerNamesTextView;
+
     Handler handler = new Handler();
 
     @AfterViews
@@ -47,11 +51,16 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
         if (this.game == null) {
             showMain();
         }
+        this.showPlayerNames();
         this.game.setObserver(this);
         int fieldSize = this.game.getField().getSize();
         imageButtons = new GameButton[fieldSize][fieldSize];
         initImageButtons();
         checkMove();
+    }
+
+    private void showPlayerNames() {
+        playerNamesTextView.setText(game.getLocalPlayer().name + " vs " + game.getRemotePlayer().name);
     }
 
 
@@ -198,13 +207,15 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
     }
 
     @Override
-    public void onOpponentsMoveComplete(at.fh_hagenberg.s1520237047.tictactoe.service.Game game, final Move move) {
+    public void onOpponentsMoveComplete(final at.fh_hagenberg.s1520237047.tictactoe.service.Game game, final Move move) {
         handler.post(new Runnable() {
             @Override
             public void run() {
                 showMove(move);
                 hideProgressDialog();
-                showYourTurnHint();
+                if (game.isRunning()) {
+                    showYourTurnHint();
+                }
             }
         });
     }
@@ -221,7 +232,8 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
     }
 
     private void showMain() {
-        MainActivity_.intent(this).start();
+        //MainActivity_.intent(this).start();
+        this.finishActivity(0);
     }
 
     @Override

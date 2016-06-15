@@ -22,6 +22,7 @@ import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -42,11 +43,13 @@ import commons.validator.routines.InetAddressValidator;
 public class MainActivity extends BaseActivity implements GameCreator.GameCreatorHandler {
 
     public static final String TAG = "Main";
+    private static final String PLAYER_NAME_PREFERENCE_KEY = "TicTacToePlayerName";
 
 
     @NotEmpty(messageResId = R.string.name_empty)
     @ViewById(R.id.input_name)
     public TextView nameTextView;
+
     private Validator validator;
     SharedPreferences sharedPreferences;
 
@@ -59,6 +62,16 @@ public class MainActivity extends BaseActivity implements GameCreator.GameCreato
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         validator = new Validator(this);
+    }
+
+    @AfterViews
+    public void init() {
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        showSavedPlayerName();
+    }
+
+    private void showSavedPlayerName() {
+        nameTextView.setText(sharedPreferences.getString(PLAYER_NAME_PREFERENCE_KEY, ""));
     }
 
     @Override
@@ -173,6 +186,12 @@ public class MainActivity extends BaseActivity implements GameCreator.GameCreato
         netServerGameCreator.createGame(3, this);
     }
 
+    private void savePlayerName() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(PLAYER_NAME_PREFERENCE_KEY, String.valueOf(this.nameTextView.getText()));
+        editor.apply();
+    }
+
     private void cancelServer() {
         if (netServerGameCreator != null) {
             netServerGameCreator.cancel();
@@ -185,8 +204,9 @@ public class MainActivity extends BaseActivity implements GameCreator.GameCreato
 
     @Override
     public void onGameCreated(Game game) {
+        savePlayerName();
         GlobalGame.getInstance().setGame(game);
-        Game_.intent(this).start();
+        Game_.intent(this).startForResult(0);
     }
 
     @Override
