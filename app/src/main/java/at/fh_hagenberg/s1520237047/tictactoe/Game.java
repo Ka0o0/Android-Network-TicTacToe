@@ -83,7 +83,7 @@ public class Game extends BaseActivity implements at.fh_hagenberg.s1520237047.ti
 
             for (int j = 0; j < imageButtons[i].length; j++) {
 
-                imageButtons[i][j] = createGameButtonForCoordinates(i, j);
+                imageButtons[i][j] = createGameButtonForCoordinates(j, i);
 
                 if (j > 0 && j < 3) {
                     View view = new View(this);
