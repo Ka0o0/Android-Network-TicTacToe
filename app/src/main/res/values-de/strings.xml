@@ -10,4 +10,20 @@
     <string name="success_no">Nein</string>
     <string name="success_yes">Ja</string>
     <string name="success_question">Möchtest du nochmal spielen?</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="game_creation_error">Es konnte kein Spiel erstellt werden!</string>
+    <string name="match_draw">Unentschieden</string>
+    <string name="move_not_possible">Dieser Spielzug ist nicht möglich</string>
+    <string name="name_empty">Bitte gib deinen Namen an</string>
+    <string name="opponent_surrendered">Der Gegner hat aufgegeben!</string>
+    <string name="wait_for_connection">Warte auf Verbindung</string>
+    <string name="wrong_ip_address">Es wurde eine falsche IP-Adresse eingegeben</string>
+    <string name="ok"></string>
+    <string name="waiting_for_opponent">Warte auf Gegner</string>
+    <string name="your_turn">Du bist dran!</string>
+    <string name="loading">Lädt</string>
+    <string name="enter_ip_address">Gib die passene IP-Adresse ein</string>
+    <string name="connect_to_ip">Bitte verbinde dich mit einem anderen Gerät mit folgender IP-Adresse: %s</string>
+    <string name="connection_closed">Verbindung verloren!</string>
+    <string name="player_wins">Spieler %s gewinnt</string>
 </resources>
